@@ -178,7 +178,7 @@ func SpanParseType(dt string, nullable bool) (int, string, string) {
 			nilVal = `spanner.NullJSON{}`
 		}
 
-	case "NUMERIC":
+	case "DECIMAL":
 		nilVal = "big.Rat{}"
 		typ = "big.Rat"
 		if nullable {
