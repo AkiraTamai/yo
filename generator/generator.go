@@ -33,8 +33,8 @@ import (
 
 	"golang.org/x/tools/imports"
 
-	"go.mercari.io/yo/internal"
-	templates "go.mercari.io/yo/tplbin"
+	"github.com/AkiraTamai/yo/internal"
+	templates "github.com/AkiraTamai/yo/tplbin"
 )
 
 // Loader is the common interface for database drivers that can generate code

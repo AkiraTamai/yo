@@ -23,7 +23,8 @@ import (
 	"fmt"
 	"os"
 
-	"go.mercari.io/yo/cmd"
+	// "go.mercari.io/yo/cmd"
+	"github.com/AkiraTamai/yo/cmd"
 )
 
 func main() {

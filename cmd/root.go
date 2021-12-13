@@ -28,9 +28,9 @@ import (
 
 	"cloud.google.com/go/spanner"
 	"github.com/spf13/cobra"
-	"go.mercari.io/yo/generator"
-	"go.mercari.io/yo/internal"
-	"go.mercari.io/yo/loaders"
+	"github.com/AkiraTamai/yo/generator"
+	"github.com/AkiraTamai/yo/internal"
+	"github.com/AkiraTamai/yo/loaders"
 )
 
 const (

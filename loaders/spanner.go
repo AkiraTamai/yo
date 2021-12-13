@@ -23,14 +23,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/big"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"cloud.google.com/go/spanner"
 	"github.com/kenshaw/snaker"
-	"go.mercari.io/yo/models"
+	"github.com/AkiraTamai/yo/models"
 	"google.golang.org/api/iterator"
 )
 
