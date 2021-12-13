@@ -22,6 +22,7 @@ package loaders
 import (
 	"context"
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -119,6 +120,7 @@ func SpanParseType(dt string, nullable bool) (int, string, string) {
 	}
 
 	var typ string
+	log.Println(dt)
 	switch dt {
 	case "BOOL":
 		nilVal = "false"
