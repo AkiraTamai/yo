@@ -23,6 +23,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/big"
 	"regexp"
 	"strconv"
 	"strings"
@@ -180,7 +181,7 @@ func SpanParseType(dt string, nullable bool) (int, string, string) {
 			nilVal = `spanner.NullJSON{}`
 		}
 
-	case "Numeric":
+	case "NUMERIC":
 		nilVal = "big.Rat{}"
 		typ = "big.Rat"
 		if nullable {
