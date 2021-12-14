@@ -55,6 +55,8 @@ CREATE TABLE FullTypes (
   FTFloatNull FLOAT64,
   FTDate DATE NOT NULL,
   FTDateNull DATE,
+  FTNumeric NUMERIC NOT NULL,
+  FTNumericNull NUMERIC,
   FTArrayStringNull ARRAY<STRING(32)>,
   FTArrayString ARRAY<STRING(32)> NOT NULL,
   FTArrayBoolNull ARRAY<BOOL>,
@@ -69,6 +71,8 @@ CREATE TABLE FullTypes (
   FTArrayFloat ARRAY<FLOAT64> NOT NULL,
   FTArrayDateNull ARRAY<DATE>,
   FTArrayDate ARRAY<DATE> NOT NULL,
+  FTArrayNumericNull ARRAY<NUMERIC>,
+  FTArrayNumeric ARRAY<NUMERIC> NOT NULL,
 ) PRIMARY KEY(PKey);
 
 CREATE UNIQUE INDEX FullTypesByFTString ON FullTypes(FTString);

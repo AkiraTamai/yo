@@ -24,6 +24,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"math/big"
 	"os"
 	"testing"
 	"time"
@@ -31,9 +32,9 @@ import (
 	"cloud.google.com/go/civil"
 	"cloud.google.com/go/spanner"
 	"github.com/google/go-cmp/cmp"
-	"go.mercari.io/yo/test/testmodels/customtypes"
-	models "go.mercari.io/yo/test/testmodels/default"
-	"go.mercari.io/yo/test/testutil"
+	"github.com/AkiraTamai/yo/test/testmodels/customtypes"
+	models "github.com/AkiraTamai/yo/test/testmodels/default"
+	"github.com/AkiraTamai/yo/test/testutil"
 	"google.golang.org/api/option"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
@@ -291,6 +292,19 @@ func TestDefaultFullType(t *testing.T) {
 	tomorrow := now.AddDate(0, 0, 1)
 	nextdate := civil.DateOf(tomorrow)
 
+
+	ratData := *big.NewRat(3, 1)
+	//anotherRatData := *big.NewRat(3, 1)
+	//ratArray := append([]big.Rat{}, ratData, anotherRatData)
+
+	ratData2 := *big.NewRat(3, 1)
+	anotherRatData2 := *big.NewRat(3, 1)
+	var rats []big.Rat
+	rats = append(rats, ratData2, anotherRatData2)
+	//nextnumericValue := big.NewRat(5, 1)
+	//mulnumericValue := numericValue.Mul(numericValue, nextnumericValue)
+	//var testaaa []big.Rat
+
 	table := map[string]struct {
 		ft *models.FullType
 	}{
@@ -329,6 +343,11 @@ func TestDefaultFullType(t *testing.T) {
 					Date:  date,
 					Valid: true,
 				},
+				FTNumeric: ratData,
+				FTNumericNull: spanner.NullNumeric{
+					Numeric:  ratData,
+					Valid: true,
+				},
 				FTArrayStringNull:    []string{"xxx1", "yyy1"},
 				FTArrayString:        []string{"xxx1", "yyy1"},
 				FTArrayBoolNull:      []bool{true, false},
@@ -343,6 +362,8 @@ func TestDefaultFullType(t *testing.T) {
 				FTArrayFloat:         []float64{0.111, 0.222},
 				FTArrayDateNull:      []civil.Date{date, nextdate},
 				FTArrayDate:          []civil.Date{date, nextdate},
+				FTArrayNumericNull:   rats,
+				FTArrayNumeric:       rats,
 			},
 		},
 		"case2": {
@@ -424,7 +445,7 @@ func TestDefaultFullType(t *testing.T) {
 				t.Fatalf("unexpected error: %v", err)
 			}
 
-			if diff := cmp.Diff(tt.ft, got); diff != "" {
+			if diff := cmp.Diff(tt.ft, got, protocmp.Transform()); diff != "" {
 				t.Errorf("(-got, +want)\n%s", diff)
 			}
 		})
@@ -445,7 +466,7 @@ func TestDefaultFullType(t *testing.T) {
 		}
 
 		expected := []string{"pkey1"}
-		if diff := cmp.Diff(expected, pkeys); diff != "" {
+		if diff := cmp.Diff(expected, pkeys, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -464,7 +485,7 @@ func TestDefaultFullType(t *testing.T) {
 		}
 
 		expected := []string{"pkey3", "pkey2"}
-		if diff := cmp.Diff(expected, pkeys); diff != "" {
+		if diff := cmp.Diff(expected, pkeys, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -494,7 +515,7 @@ func TestCustomCompositePrimaryKey(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if diff := cmp.Diff(cpk, got); diff != "" {
+		if diff := cmp.Diff(cpk, got, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -509,7 +530,7 @@ func TestCustomCompositePrimaryKey(t *testing.T) {
 			t.Fatalf("expect the number of rows %v, but got %v", 1, len(got))
 		}
 
-		if diff := cmp.Diff(cpk, got[0]); diff != "" {
+		if diff := cmp.Diff(cpk, got[0], protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -535,7 +556,7 @@ func TestCustomCompositePrimaryKey(t *testing.T) {
 			t.Fatalf("expect the number of rows %v, but got %v", 1, len(got))
 		}
 
-		if diff := cmp.Diff(cpk, got[0]); diff != "" {
+		if diff := cmp.Diff(cpk, got[0], protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -555,7 +576,7 @@ func TestCustomCompositePrimaryKey(t *testing.T) {
 			PKey2: cpk.PKey2,
 			Error: cpk.Error,
 		}
-		if diff := cmp.Diff(expected, got[0]); diff != "" {
+		if diff := cmp.Diff(expected, got[0], protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -587,7 +608,7 @@ func TestGeneratedColumn(t *testing.T) {
 			LastName:  "Doe",
 			FullName:  "John Doe",
 		}
-		if diff := cmp.Diff(want, got); diff != "" {
+		if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -614,7 +635,7 @@ func TestGeneratedColumn(t *testing.T) {
 			LastName:  "Doe",
 			FullName:  "Jane Doe",
 		}
-		if diff := cmp.Diff(want, got); diff != "" {
+		if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})
@@ -641,7 +662,7 @@ func TestGeneratedColumn(t *testing.T) {
 			LastName:  "Doe",
 			FullName:  "Paul Doe",
 		}
-		if diff := cmp.Diff(want, got); diff != "" {
+		if diff := cmp.Diff(want, got, protocmp.Transform()); diff != "" {
 			t.Errorf("(-got, +want)\n%s", diff)
 		}
 	})

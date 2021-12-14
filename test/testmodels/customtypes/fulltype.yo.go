@@ -5,6 +5,7 @@ package customtypes
 import (
 	"context"
 	"fmt"
+	"math/big"
 	"strings"
 	"time"
 
@@ -31,6 +32,8 @@ type FullType struct {
 	FTFloatNull          spanner.NullFloat64 `spanner:"FTFloatNull" json:"FTFloatNull"`                   // FTFloatNull
 	FTDate               civil.Date          `spanner:"FTDate" json:"FTDate"`                             // FTDate
 	FTDateNull           spanner.NullDate    `spanner:"FTDateNull" json:"FTDateNull"`                     // FTDateNull
+	FTNumeric            big.Rat             `spanner:"FTNumeric" json:"FTNumeric"`                       // FTNumeric
+	FTNumericNull        spanner.NullNumeric `spanner:"FTNumericNull" json:"FTNumericNull"`               // FTNumericNull
 	FTArrayStringNull    []string            `spanner:"FTArrayStringNull" json:"FTArrayStringNull"`       // FTArrayStringNull
 	FTArrayString        []string            `spanner:"FTArrayString" json:"FTArrayString"`               // FTArrayString
 	FTArrayBoolNull      []bool              `spanner:"FTArrayBoolNull" json:"FTArrayBoolNull"`           // FTArrayBoolNull
@@ -45,6 +48,8 @@ type FullType struct {
 	FTArrayFloat         []float64           `spanner:"FTArrayFloat" json:"FTArrayFloat"`                 // FTArrayFloat
 	FTArrayDateNull      []civil.Date        `spanner:"FTArrayDateNull" json:"FTArrayDateNull"`           // FTArrayDateNull
 	FTArrayDate          []civil.Date        `spanner:"FTArrayDate" json:"FTArrayDate"`                   // FTArrayDate
+	FTArrayNumericNull   []big.Rat           `spanner:"FTArrayNumericNull" json:"FTArrayNumericNull"`     // FTArrayNumericNull
+	FTArrayNumeric       []big.Rat           `spanner:"FTArrayNumeric" json:"FTArrayNumeric"`             // FTArrayNumeric
 }
 
 func FullTypePrimaryKeys() []string {
@@ -70,6 +75,8 @@ func FullTypeColumns() []string {
 		"FTFloatNull",
 		"FTDate",
 		"FTDateNull",
+		"FTNumeric",
+		"FTNumericNull",
 		"FTArrayStringNull",
 		"FTArrayString",
 		"FTArrayBoolNull",
@@ -84,6 +91,8 @@ func FullTypeColumns() []string {
 		"FTArrayFloat",
 		"FTArrayDateNull",
 		"FTArrayDate",
+		"FTArrayNumericNull",
+		"FTArrayNumeric",
 	}
 }
 
@@ -104,6 +113,8 @@ func FullTypeWritableColumns() []string {
 		"FTFloatNull",
 		"FTDate",
 		"FTDateNull",
+		"FTNumeric",
+		"FTNumericNull",
 		"FTArrayStringNull",
 		"FTArrayString",
 		"FTArrayBoolNull",
@@ -118,6 +129,8 @@ func FullTypeWritableColumns() []string {
 		"FTArrayFloat",
 		"FTArrayDateNull",
 		"FTArrayDate",
+		"FTArrayNumericNull",
+		"FTArrayNumeric",
 	}
 }
 
@@ -160,6 +173,10 @@ func (ft *FullType) columnsToPtrs(cols []string, customPtrs map[string]interface
 			ret = append(ret, &ft.FTDate)
 		case "FTDateNull":
 			ret = append(ret, &ft.FTDateNull)
+		case "FTNumeric":
+			ret = append(ret, &ft.FTNumeric)
+		case "FTNumericNull":
+			ret = append(ret, &ft.FTNumericNull)
 		case "FTArrayStringNull":
 			ret = append(ret, &ft.FTArrayStringNull)
 		case "FTArrayString":
@@ -188,6 +205,10 @@ func (ft *FullType) columnsToPtrs(cols []string, customPtrs map[string]interface
 			ret = append(ret, &ft.FTArrayDateNull)
 		case "FTArrayDate":
 			ret = append(ret, &ft.FTArrayDate)
+		case "FTArrayNumericNull":
+			ret = append(ret, &ft.FTArrayNumericNull)
+		case "FTArrayNumeric":
+			ret = append(ret, &ft.FTArrayNumeric)
 		default:
 			return nil, fmt.Errorf("unknown column: %s", col)
 		}
@@ -229,6 +250,10 @@ func (ft *FullType) columnsToValues(cols []string) ([]interface{}, error) {
 			ret = append(ret, ft.FTDate)
 		case "FTDateNull":
 			ret = append(ret, ft.FTDateNull)
+		case "FTNumeric":
+			ret = append(ret, ft.FTNumeric)
+		case "FTNumericNull":
+			ret = append(ret, ft.FTNumericNull)
 		case "FTArrayStringNull":
 			ret = append(ret, ft.FTArrayStringNull)
 		case "FTArrayString":
@@ -257,6 +282,10 @@ func (ft *FullType) columnsToValues(cols []string) ([]interface{}, error) {
 			ret = append(ret, ft.FTArrayDateNull)
 		case "FTArrayDate":
 			ret = append(ret, ft.FTArrayDate)
+		case "FTArrayNumericNull":
+			ret = append(ret, ft.FTArrayNumericNull)
+		case "FTArrayNumeric":
+			ret = append(ret, ft.FTArrayNumeric)
 		default:
 			return nil, fmt.Errorf("unknown column: %s", col)
 		}
@@ -381,7 +410,7 @@ func (ft *FullType) Delete(ctx context.Context) *spanner.Mutation {
 // Generated from unique index 'FullTypesByFTString'.
 func FindFullTypeByFTString(ctx context.Context, db YORODB, fTString string) (*FullType, error) {
 	const sqlstr = "SELECT " +
-		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate " +
+		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTNumeric, FTNumericNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate, FTArrayNumericNull, FTArrayNumeric " +
 		"FROM FullTypes@{FORCE_INDEX=FullTypesByFTString} " +
 		"WHERE FTString = @param0"
 
@@ -449,7 +478,7 @@ func ReadFullTypeByFTString(ctx context.Context, db YORODB, keys spanner.KeySet)
 // Generated from index 'FullTypesByInTimestampNull'.
 func FindFullTypesByFTIntFTTimestampNull(ctx context.Context, db YORODB, fTInt int32, fTTimestampNull spanner.NullTime) ([]*FullType, error) {
 	var sqlstr = "SELECT " +
-		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate " +
+		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTNumeric, FTNumericNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate, FTArrayNumericNull, FTArrayNumeric " +
 		"FROM FullTypes@{FORCE_INDEX=FullTypesByInTimestampNull} "
 
 	conds := make([]string, 2)
@@ -533,7 +562,7 @@ func ReadFullTypesByFTIntFTTimestampNull(ctx context.Context, db YORODB, keys sp
 // Generated from index 'FullTypesByIntDate'.
 func FindFullTypesByFTIntFTDate(ctx context.Context, db YORODB, fTInt int32, fTDate civil.Date) ([]*FullType, error) {
 	const sqlstr = "SELECT " +
-		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate " +
+		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTNumeric, FTNumericNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate, FTArrayNumericNull, FTArrayNumeric " +
 		"FROM FullTypes@{FORCE_INDEX=FullTypesByIntDate} " +
 		"WHERE FTInt = @param0 AND FTDate = @param1"
 
@@ -609,7 +638,7 @@ func ReadFullTypesByFTIntFTDate(ctx context.Context, db YORODB, keys spanner.Key
 // Generated from index 'FullTypesByIntTimestamp'.
 func FindFullTypesByFTIntFTTimestamp(ctx context.Context, db YORODB, fTInt int32, fTTimestamp time.Time) ([]*FullType, error) {
 	const sqlstr = "SELECT " +
-		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate " +
+		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTNumeric, FTNumericNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate, FTArrayNumericNull, FTArrayNumeric " +
 		"FROM FullTypes@{FORCE_INDEX=FullTypesByIntTimestamp} " +
 		"WHERE FTInt = @param0 AND FTTimestamp = @param1"
 
@@ -685,7 +714,7 @@ func ReadFullTypesByFTIntFTTimestamp(ctx context.Context, db YORODB, keys spanne
 // Generated from index 'FullTypesByTimestamp'.
 func FindFullTypesByFTTimestamp(ctx context.Context, db YORODB, fTTimestamp time.Time) ([]*FullType, error) {
 	const sqlstr = "SELECT " +
-		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate " +
+		"PKey, FTString, FTStringNull, FTBool, FTBoolNull, FTBytes, FTBytesNull, FTTimestamp, FTTimestampNull, FTInt, FTIntNull, FTFloat, FTFloatNull, FTDate, FTDateNull, FTNumeric, FTNumericNull, FTArrayStringNull, FTArrayString, FTArrayBoolNull, FTArrayBool, FTArrayBytesNull, FTArrayBytes, FTArrayTimestampNull, FTArrayTimestamp, FTArrayIntNull, FTArrayInt, FTArrayFloatNull, FTArrayFloat, FTArrayDateNull, FTArrayDate, FTArrayNumericNull, FTArrayNumeric " +
 		"FROM FullTypes@{FORCE_INDEX=FullTypesByTimestamp} " +
 		"WHERE FTTimestamp = @param0"
 
